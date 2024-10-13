@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
-import { SendHorizonal, Copy } from 'lucide-react';
+import { SendHorizonal } from 'lucide-react';
 import Image from 'next/image';
 import { Textarea } from "@/components/ui/textarea";
 
