@@ -1,9 +1,8 @@
 import React from 'react'
 import Nav from './Nav'
 import Hero from './Hero'
-import Footer from './Footer'
 
-const VideoBackgoundLayout = ({ children }) => {
+const VideoBackgoundLayout = () => {
   return (
     <div className="video-background-container rounded-bottom">
       <video autoPlay loop muted className="video-background">
@@ -13,7 +12,6 @@ const VideoBackgoundLayout = ({ children }) => {
       <div className="content-overlay">
         <Nav />
         <Hero />
-        {children}
       </div>
       <style jsx>{`
         .video-background-container {

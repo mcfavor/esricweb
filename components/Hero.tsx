@@ -1,16 +1,9 @@
 import React from 'react'
 import { FlipWords } from './ui/flip-words';
 import Button from './Button';
-import { TypewriterEffectSmooth } from './ui/typewriter-effect';
 
 const Hero = () => {
   const words = ["golden", "safe", "happy", "peaceful"];
-  const insurewords = [{
-    text: "Ask",
-  },
-  {
-    text: "InsureChat",
-  }];
   
   return (
     <section className="max-container padding-container flex flex-col gap-20 py-10 md:gap-5 lg:py-20 min-h-screen">

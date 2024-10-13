@@ -51,7 +51,7 @@ export const FOOTER_LINKS = [
       links: [
         'About ESRIC',
         'Press Releases',
-        'Jobs',
+        'Vacancies',
         'Privacy Policy',
       ],
     },

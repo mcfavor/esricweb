@@ -2,12 +2,11 @@ import React from 'react'
 import Hero from './Hero';
 import Nav from './Nav';
 
-const BackgroundLayout = ({ children }) => {
+const BackgroundLayout = () => {
   return (
     <div className="bg-image-container rounded-bottom">
       <Nav />
       <Hero />
-      {children}
       <style jsx>{`
         .bg-image-container {
           background-image: url('/assets/images/happy-family.jpg');

@@ -5,7 +5,6 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import { SendHorizonal, Copy } from 'lucide-react';
 import Image from 'next/image';
 import { Textarea } from "@/components/ui/textarea";
-import Link from "next/link";
 
 const InsureChat = () => {
   const [inputValue, setInputValue] = useState("");

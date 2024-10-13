@@ -5,12 +5,9 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { NAV_LINKS } from '@/constants';
 import Button from './Button';
-import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import {
   IconArrowLeft,
   IconBrandTabler,
-  IconSettings,
-  IconUserBolt,
 } from "@tabler/icons-react";
 
 const Nav = () => {
