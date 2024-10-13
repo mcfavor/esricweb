@@ -4,8 +4,8 @@ import "./globals.css";
 
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Head from "next/head";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <body
         className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`)}
       >
@@ -41,7 +44,7 @@ export default function RootLayout({
             <main className="relative overflow-hidden">
               {children}
             </main>
-            {/* <Footer/> */}
+            <Footer/>
           </ThemeProvider>
       </body>
     </html>
