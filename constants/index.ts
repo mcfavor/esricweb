@@ -4,7 +4,7 @@ import InsuranceContent from "@/components/InsuranceContent";
 // NAVIGATION
 export const NAV_LINKS = [
     { href: '/', key: 'home', label: 'Home' },
-    { href: '/', key: 'InsureChat', label: 'InsureChat' },
+    { href: '/openinsurechat', key: 'InsureChat', label: 'InsureChat' },
     { href: '/', key: 'services', label: 'Resources' },
     { href: '/', key: 'pricing ', label: `What's new`},
     { href: '/', key: 'contact_us', label: 'Contact Us' },

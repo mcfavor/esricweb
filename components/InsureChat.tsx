@@ -5,6 +5,7 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import { SendHorizonal, Copy } from 'lucide-react';
 import Image from 'next/image';
 import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
 
 const InsureChat = () => {
   const [inputValue, setInputValue] = useState("");
@@ -92,7 +93,7 @@ const InsureChat = () => {
           <h1 className="relative z-10 text-lg md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-blue-500 to-blue-800 text-center font-sans font-bold">
             InsureChat
           </h1>
-          <p className="text-neutral-300 max-w-lg mx-auto my-2 text-sm text-center relative z-10">
+          <p className="text-neutral-300 w-1/2 mx-auto my-2 text-sm text-center relative z-10">
             Welcome to InsureChat, a natural language chat bot that answers your questions
             about our insurance products. For all your enquiries and estimated costs, InsureChat has 
             got you covered.
@@ -131,7 +132,7 @@ const InsureChat = () => {
       )}
 
       {/* Input Section */}
-      <div className="fixed bottom-0 w-full p-4 flex items-center justify-center bg-neutral-950">
+      <div className="max-container fixed bottom-0 w-1/2 p-4 flex items-center justify-center bg-neutral-950">
         <div className="relative w-full max-w-2xl">
           <Textarea
             ref={textareaRef}
