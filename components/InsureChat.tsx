@@ -1,32 +1,37 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { SendHorizonal } from 'lucide-react';
 import Image from 'next/image';
 import { Textarea } from "@/components/ui/textarea";
 
+interface Message {
+  sender: "user" | "bot";
+  text: string;
+}
+
 const InsureChat = () => {
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isChatStarted, setIsChatStarted] = useState(false);
-  const chatContainerRef = useRef(null);
-  const textareaRef = useRef(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
     adjustTextareaHeight();
   };
 
   const handleSubmit = () => {
     if (inputValue.trim()) {
-      const userMessage = { sender: "user", text: inputValue };
+      const userMessage: Message = { sender: "user", text: inputValue };
       setMessages(prevMessages => [...prevMessages, userMessage]);
       setInputValue("");
 
       setTimeout(() => {
         const botResponse = getBotResponse(userMessage.text);
-        const botMessage = { sender: "bot", text: botResponse };
+        const botMessage: Message = { sender: "bot", text: botResponse };
         setMessages(prevMessages => [...prevMessages, botMessage]);
       }, 500);
 
@@ -42,14 +47,7 @@ const InsureChat = () => {
     }
   };
 
-  const resetTextareaHeight = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = 'auto';
-    }
-  };
-
-  const getBotResponse = (message) => {
+  const getBotResponse = (message: string): string => {
     if (message.toLowerCase().includes("retirement")) {
       return "We offer a variety of retirement plans. Would you like more information on that?";
     } else if (message.toLowerCase().includes("premium")) {
@@ -59,7 +57,7 @@ const InsureChat = () => {
     }
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
 
@@ -70,7 +68,7 @@ const InsureChat = () => {
   };
 
   useEffect(() => {
-    scrollToBottom(); // Scroll to the bottom when a new message is added
+    scrollToBottom();
     adjustTextareaHeight();
     const textarea = textareaRef.current;
     if (textarea) {
