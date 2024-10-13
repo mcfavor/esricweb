@@ -36,11 +36,6 @@ const Nav = () => {
         </ul>
 
         <div className="lg:flexCenter hidden gap-10">
-          {/* <Button 
-            type="button"
-            title="Login"
-            variant="btn_blue_outline"
-          /> */}
           <div>
             <a href="/" className="hover:font-bold text-blue-70 regular-20">Login</a>
           </div>
