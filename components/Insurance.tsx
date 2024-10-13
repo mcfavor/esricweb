@@ -56,7 +56,7 @@ const Insurance = () => {
 
   return (
     <section className="max-container flex flex-col">
-      <h2 className="mx-20 justify-center bold-52 lg:bold-64 mt-5 md:text-5xl text-blue-70">
+      <h2 className="mx-20 justify-center lg:bold-64 mt-5 md:text-5xl text-blue-70 bold-32">
         Discover Our Products
       </h2>
       <div className="mx-10">
