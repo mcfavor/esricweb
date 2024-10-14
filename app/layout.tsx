@@ -4,7 +4,6 @@ import "./globals.css";
 
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import Footer from "@/components/Footer";
 import Head from "next/head";
 
 const geistSans = localFont({
@@ -40,11 +39,9 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="light"
           >
-            {/* <Nav/> */}
             <main className="relative overflow-hidden">
               {children}
             </main>
-            {/* <Footer/> */}
           </ThemeProvider>
       </body>
     </html>
