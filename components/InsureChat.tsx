@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
+import axios from "axios";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { SendHorizonal } from 'lucide-react';
 import Image from 'next/image';
@@ -18,24 +19,38 @@ const InsureChat = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Function to handle input changes
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
     adjustTextareaHeight();
   };
 
-  const handleSubmit = () => {
+  // Function to handle message submission
+  const handleSubmit = async () => {
     if (inputValue.trim()) {
       const userMessage: Message = { sender: "user", text: inputValue };
       setMessages(prevMessages => [...prevMessages, userMessage]);
       setInputValue("");
 
-      setTimeout(() => {
-        const botResponse = getBotResponse(userMessage.text);
-        const botMessage: Message = { sender: "bot", text: botResponse };
-        setMessages(prevMessages => [...prevMessages, botMessage]);
-      }, 500);
-
+      // Call custom GPT model (ERICA) to get the response
       setIsChatStarted(true);
+      const botResponse = await getBotResponse(userMessage.text);
+      const botMessage: Message = { sender: "bot", text: botResponse };
+      setMessages(prevMessages => [...prevMessages, botMessage]);
+    }
+  };
+
+  // Function to fetch ERICA's response from OpenAI
+  const getBotResponse = async (message: string): Promise<string> => {
+    try {
+      const response = await axios.post("/api/insurechat/ask", {
+        message, // Send the user's message
+      });
+      
+      return response.data.reply; // Return ERICA's response
+    } catch (error) {
+      console.error("Error fetching bot response:", error);
+      return "Sorry, I am unable to respond at the moment. Please try again later.";
     }
   };
 
@@ -47,20 +62,6 @@ const InsureChat = () => {
     }
   };
 
-  const getBotResponse = (message: string): string => {
-    if (message.toLowerCase().includes("retirement")) {
-      return "We offer a variety of retirement plans. Would you like more information on that?";
-    } else if (message.toLowerCase().includes("premium")) {
-      return "The estimated monthly premium for a funeral cover of E50000 is E250. Would you like to proceed?";
-    } else {
-      return "I'm not sure about that. Can you ask me something else related to insurance?";
-    }
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
-
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -70,16 +71,6 @@ const InsureChat = () => {
   useEffect(() => {
     scrollToBottom();
     adjustTextareaHeight();
-    const textarea = textareaRef.current;
-    if (textarea) {
-      const adjustHeight = () => {
-        textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
-      };
-
-      textarea.addEventListener('input', adjustHeight);
-      return () => textarea.removeEventListener('input', adjustHeight);
-    }
   }, [messages]);
 
   return (
@@ -102,7 +93,7 @@ const InsureChat = () => {
       {isChatStarted && (
         <div
           className="w-full flex flex-col items-center mb-20 overflow-y-auto"
-          style={{ maxHeight: "calc(100vh - 100px - 60px)" }} // Adjusting for textarea height
+          style={{ maxHeight: "calc(100vh - 100px - 60px)" }}
           ref={chatContainerRef}
         >
           <div className="w-full max-w-2xl flex flex-col space-y-4">
@@ -116,19 +107,12 @@ const InsureChat = () => {
                 } max-w-[80%] break-words`}
               >
                 <span className="w-full whitespace-pre-wrap break-words">{message.text}</span>
-                <button
-                  onClick={() => copyToClipboard(message.text)}
-                  className="mt-2 text-neutral-400 hover:text-white"
-                >
-                  {/* <Copy size={20} /> */}
-                </button>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Input Section */}
       <div className="max-container fixed bottom-0 w-1/2 p-4 flex items-center justify-center bg-neutral-950">
         <div className="relative w-full max-w-2xl">
           <Textarea
