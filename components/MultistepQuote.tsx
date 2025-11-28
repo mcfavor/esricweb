@@ -12,6 +12,58 @@ const MultistepQuote = () => {
   const [showInsuranceError, setShowInsuranceError] = useState(false);
   const [showProductOptionError, setShowProductOptionError] = useState(false);
   const [funeralInsuranceType, setFuneralInsuranceType] = useState("");
+  const [showFuneralOptionError, setShowFuneralOptionError] = useState(false);
+  const [funeralcoverAmount, funeralsetCoverAmount] = useState(5000); // Default cover amount
+  const [funeralmaxCoverAmount, funeralsetMaxCoverAmount] = useState(50000); // Default max cover amount
+  const [funeralshowCoverAmountError, funeralsetShowCoverAmountError] =
+    useState(false);
+
+  const [selectedTombstoneBenefit, setSelectedTombstoneBenefit] = useState<
+    string | null
+  >(null); // "30%" or "50%"
+  const [additionalBenefit, setAdditionalBenefit] = useState(false); // true or false
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [showPrice, setShowPrice] = useState(false); // To toggle between contact form and price display
+
+  const priceTable = {
+    5000: { basic: 16.0, "30%": null, "50%": null },
+    10000: { basic: 24.0, "30%": 33.0, "50%": 35.0 },
+    15000: { basic: 37.0, "30%": 50.0, "50%": 53.0 },
+    20000: { basic: 49.0, "30%": 65.0, "50%": 70.0 },
+    25000: { basic: 61.0, "30%": 80.0, "50%": 88.0 },
+    30000: { basic: 74.0, "30%": 93.0, "50%": 106.0 },
+    35000: { basic: 86.0, "30%": 109.0, "50%": 123.0 },
+    40000: { basic: 98.0, "30%": 124.0, "50%": 141.0 },
+    45000: { basic: 111.0, "30%": 140.0, "50%": 159.0 },
+    50000: { basic: 124.0, "30%": 153.0, "50%": 177.0 },
+  };
+
+  const calculateTombstonePrice = (coverAmount, percentage) => {
+    return priceTable[coverAmount]?.[percentage] || 0;
+  };
+
+  const riders = [
+    {
+      id: "30-tombstone",
+      label: "30% Tombstone Benefit",
+      description: "Adds 30% of the cover amount for tombstone expenses.",
+      price: calculateTombstonePrice(funeralcoverAmount, "30%"),
+    },
+    {
+      id: "50-tombstone",
+      label: "50% Tombstone Benefit",
+      description: "Adds 50% of the cover amount for tombstone expenses.",
+      price: calculateTombstonePrice(funeralcoverAmount, "50%"),
+    },
+    {
+      id: "additional-benefit",
+      label: "Additional Benefit",
+      description:
+        "Pays E1,000 worth of groceries, E300 electricity, and E200 airtime.",
+      price: 5.7, // Fixed price for additional benefit
+    },
+  ];
 
   const handleNext = () => {
     if (step === 2 && !firstName.trim()) {
@@ -44,6 +96,52 @@ const MultistepQuote = () => {
       setShowProductOptionError(false);
     }
 
+    if (
+      step === 5 &&
+      insuranceType === "me" &&
+      selectedNeed === "Funeral Insurance"
+    ) {
+      if (!funeralInsuranceType) {
+        setShowFuneralOptionError(true); // Show error if no option is selected
+        return;
+      }
+      setShowFuneralOptionError(false); // Hide error if an option is selected
+    }
+
+    if (funeralInsuranceType === "A lovely Senior Citizen") {
+      funeralsetMaxCoverAmount(20000); // Max cover for Senior Citizen
+    } else {
+      funeralsetMaxCoverAmount(50000); // Max cover for "Just Me" and "My Family and I"
+    }
+
+    if (
+      step === 6 &&
+      insuranceType === "me" &&
+      selectedNeed === "Funeral Insurance"
+    ) {
+      if (
+        funeralcoverAmount < 5000 ||
+        funeralcoverAmount > funeralmaxCoverAmount
+      ) {
+        funeralsetShowCoverAmountError(true);
+        return;
+      }
+      // Proceed to the next step
+      funeralsetShowCoverAmountError(false);
+    }
+
+    if (
+      step === 7 &&
+      insuranceType === "me" &&
+      selectedNeed === "Funeral Insurance"
+    ) {
+      if (selectedTombstoneBenefit && additionalBenefit) {
+        alert("You can only select one Tombstone Benefit.");
+        return;
+      }
+      // Proceed to the next step
+    }
+
     setStep(step + 1);
   };
 
@@ -63,8 +161,14 @@ const MultistepQuote = () => {
     "Retirement Annuity",
   ];
 
+  const funeral_options = [
+    "Just Me",
+    "My Family and I",
+    "A lovely Senior Citizen",
+  ];
+
   return (
-    <div className="form-container">
+    <div className="">
       {/* <div className="progress-bar">
         <div
           className="progress"
@@ -74,7 +178,7 @@ const MultistepQuote = () => {
 
       <AnimatePresence mode="wait">
         {step === 1 && (
-          <div className="flex items-center justify-center p-4">
+          <div className="flex items-center justify-center p-4 form-container">
             <motion.div
               key="step1"
               initial={{ opacity: 0, x: 100 }}
@@ -117,7 +221,7 @@ const MultistepQuote = () => {
         )}
 
         {step === 2 && (
-          <div className="flex items-center justify-center p-4">
+          <div className="flex items-center justify-center p-4 form-container">
             <motion.div
               initial={{ opacity: 0, x: 100 }}
               animate={{
@@ -176,7 +280,7 @@ const MultistepQuote = () => {
         )}
 
         {step === 3 && (
-          <div className="flex items-start p-4">
+          <div className="flex items-start p-4 form-container">
             <motion.div
               key="step3"
               initial={{ opacity: 0, x: 100 }}
@@ -245,71 +349,73 @@ const MultistepQuote = () => {
         )}
 
         {step === 4 && insuranceType === "me" && (
-          <motion.div
-            key="step4"
-            initial={{ opacity: 0, x: 100 }}
-            animate={{
-              opacity: 1,
-              x: 0,
-              transition: { duration: 0.6, ease: "easeOut" },
-            }}
-            exit={{
-              opacity: 0,
-              x: -100,
-              transition: { duration: 0.6, ease: "easeIn" },
-            }}
-            className="step"
-          >
-            <h1 className="bold-32 text-blue-70">
-              We've got a lot in our basket for you {firstName}.
-            </h1>
-            <p className="bold-40 text-blue-50">
-              What do you need at the moment?
-            </p>
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              {needs.map((need, index) => (
+          <div className="form-container">
+            <motion.div
+              key="step4"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              }}
+              exit={{
+                opacity: 0,
+                x: -100,
+                transition: { duration: 0.6, ease: "easeIn" },
+              }}
+              className="step"
+            >
+              <h1 className="bold-32 text-blue-70">
+                We've got a lot in our basket for you {firstName}.
+              </h1>
+              <p className="bold-40 text-blue-50">
+                What do you need at the moment?
+              </p>
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                {needs.map((need, index) => (
+                  <button
+                    key={index}
+                    className={`option option rounded-2xl px-6 py-3 text-left border-blue-70 border hover:bg-blue-70 hover:text-white ${
+                      selectedNeed === need ? "selected" : ""
+                    }`}
+                    onClick={() => setSelectedNeed(need)}
+                  >
+                    {need}
+                  </button>
+                ))}
+              </div>
+
+              <AnimatePresence>
+                {showProductOptionError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="text-red-500 text-sm mt-2"
+                  >
+                    Please select an option
+                  </motion.p>
+                )}
+              </AnimatePresence>
+
+              <div>
                 <button
-                  key={index}
-                  className={`option option rounded-2xl px-6 py-3 text-left border-blue-70 border hover:bg-blue-70 hover:text-white ${
-                    selectedNeed === need ? "selected" : ""
-                  }`}
-                  onClick={() => setSelectedNeed(need)}
+                  className="btn_blue_outline rounded-full"
+                  onClick={handleNext}
                 >
-                  {need}
+                  Next
                 </button>
-              ))}
-            </div>
-
-            <AnimatePresence>
-              {showProductOptionError && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="text-red-500 text-sm mt-2"
-                >
-                  Please select an option
-                </motion.p>
-              )}
-            </AnimatePresence>
-
-            <div>
-              <button
-                className="btn_blue_outline rounded-full"
-                onClick={handleNext}
-              >
-                Next
-              </button>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </div>
         )}
 
         {step === 5 &&
           insuranceType === "me" &&
           selectedNeed === "Funeral Insurance" && (
-            <div className="flex items-start p-4">
+            <div className="flex items-start p-4 form-container">
               <motion.div
-                key="step3"
+                key="step5"
                 initial={{ opacity: 0, x: 100 }}
                 animate={{
                   opacity: 1,
@@ -332,43 +438,22 @@ const MultistepQuote = () => {
                 <p className="text-blue-50 bold-40 mt-2">
                   I'd like to know who we're going to cover.*
                 </p>
-                <div className="options flex flex-row gap-4 mt-4">
-                  <button
-                    className={`option rounded-2xl px-6 py-3 text-left border-blue-70 border hover:bg-blue-70 hover:text-white ${
-                      funeralInsuranceType === "Funeral Insurance"
-                        ? "selected"
-                        : ""
-                    }`}
-                    onClick={() => setFuneralInsuranceType("Just Me")}
-                  >
-                    Just Me
-                  </button>
-                  <button
-                    className={`option rounded-2xl px-6 py-3 text-left border-blue-70 border hover:bg-blue-70 hover:text-white ${
-                      funeralInsuranceType === "Funeral Insurance"
-                        ? "selected"
-                        : ""
-                    }`}
-                    onClick={() => setFuneralInsuranceType("My Family and I")}
-                  >
-                    My Family and I
-                  </button>
-                  <button
-                    className={`option rounded-2xl px-6 py-3 text-left border-blue-70 border hover:bg-blue-70 hover:text-white ${
-                      funeralInsuranceType === "Funeral Insurance"
-                        ? "selected"
-                        : ""
-                    }`}
-                    onClick={() =>
-                      setFuneralInsuranceType("A lovely Senior Citizen")
-                    }
-                  >
-                    A lovely Senior Citizen
-                  </button>
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  {funeral_options.map((option, index) => (
+                    <button
+                      key={index}
+                      className={`option rounded-2xl px-5 py-3 text-left border-blue-70 border hover:bg-blue-70 hover:text-white ${
+                        funeralInsuranceType === option ? "selected" : ""
+                      }`}
+                      onClick={() => setFuneralInsuranceType(option)}
+                    >
+                      {option}
+                    </button>
+                  ))}
                 </div>
 
-                {/* <AnimatePresence>
-                  {showInsuranceError && (
+                <AnimatePresence>
+                  {showFuneralOptionError && (
                     <motion.p
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -378,15 +463,394 @@ const MultistepQuote = () => {
                       Please select an option
                     </motion.p>
                   )}
-                </AnimatePresence> */}
+                </AnimatePresence>
 
-                <div className="w-full flex justify-start">
+                <div className="w-full flex justify-start mt-6">
                   <button
                     className="btn_blue_outline rounded-full"
                     onClick={handleNext}
                   >
                     Next
                   </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+        {step === 6 &&
+          insuranceType === "me" &&
+          selectedNeed === "Funeral Insurance" && (
+            <div className="flex justify-center w-full p-4 form-container">
+              <motion.div
+                key="step6"
+                initial={{ opacity: 0, x: 100 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.6, ease: "easeOut" },
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -100,
+                  transition: { duration: 0.6, ease: "easeIn" },
+                }}
+                className="w-full max-w-lg"
+              >
+                <div className="space-y-4">
+                  <h2 className="text-blue-70 bold-32">
+                    {firstName}, how much cover would you like?
+                  </h2>
+
+                  <p className="text-blue-50 bold-40">
+                    Slide to select your desired cover amount.
+                  </p>
+
+                  {/* Slider Container */}
+                  <div className="mt-8 w-full">
+                    {/* Display Selected Cover Amount */}
+                    <p className="text-blue-70 bold-32 text-center mb-4">
+                      E {funeralcoverAmount.toLocaleString()}
+                    </p>
+
+                    {/* Slider */}
+                    <input
+                      type="range"
+                      min="5000"
+                      max={funeralmaxCoverAmount}
+                      step="5000"
+                      value={funeralcoverAmount}
+                      onChange={(e) =>
+                        funeralsetCoverAmount(Number(e.target.value))
+                      }
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      style={{
+                        width: "100%",
+                        minWidth: "100%",
+                        maxWidth: "100%",
+                      }}
+                    />
+
+                    {/* Slider Labels */}
+                    <div className="flex justify-between text-gray-500 regular-16 mt-2">
+                      <span>E 5,000</span>
+                      <span>E {funeralmaxCoverAmount.toLocaleString()}</span>
+                    </div>
+                  </div>
+
+                  <AnimatePresence>
+                    {funeralshowCoverAmountError && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="text-red-500 text-sm mt-2 text-center"
+                      >
+                        Please select a valid cover amount.
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Next Button */}
+                  <div className="w-full mt-8">
+                    <button
+                      className="btn_blue_outline rounded-full mt-2"
+                      onClick={handleNext}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+        {step === 7 &&
+          insuranceType === "me" &&
+          selectedNeed === "Funeral Insurance" && (
+            <div className="flex justify-center w-full p-4 funeral-form-container">
+              <motion.div
+                key="step7"
+                initial={{ opacity: 0, x: 100 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.6, ease: "easeOut" },
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -100,
+                  transition: { duration: 0.6, ease: "easeIn" },
+                }}
+                className="w-full max-w-lg"
+              >
+                <div className="space-y-4">
+                  <h2 className="text-blue-70 bold-32">
+                    {firstName}, would you like to add optional extras?
+                  </h2>
+
+                  <p className="text-blue-50 bold-32">
+                    Select the optional riders you'd like to include.
+                  </p>
+
+                  {/* Riders List */}
+                  <div className="space-y-6">
+                    {riders.map((rider) => (
+                      <div
+                        key={rider.id}
+                        className={`p-4 border rounded-lg ${
+                          (selectedTombstoneBenefit === rider.label ||
+                            (rider.id === "additional-benefit" &&
+                              additionalBenefit)) &&
+                          "border-blue-500 bg-blue-50"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-blue-70 bold-24">
+                              {rider.label}
+                            </h3>
+                            <p className="text-gray-500 regular-18">
+                              {rider.description}
+                            </p>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            {/* <span className="text-blue-70 bold-24">
+                              E{" "}
+                              {rider.price !== null
+                                ? rider.price.toFixed(2)
+                                : "N/A"}
+                            </span> */}
+                            <input
+                              type="checkbox"
+                              checked={
+                                selectedTombstoneBenefit === rider.label ||
+                                (rider.id === "additional-benefit" &&
+                                  additionalBenefit)
+                              }
+                              onChange={() => {
+                                if (rider.id === "additional-benefit") {
+                                  setAdditionalBenefit(!additionalBenefit);
+                                } else {
+                                  setSelectedTombstoneBenefit(
+                                    selectedTombstoneBenefit === rider.label
+                                      ? null
+                                      : rider.label
+                                  );
+                                }
+                              }}
+                              className="w-5 h-5 rounded border-blue-500 text-blue-500 focus:ring-blue-500"
+                              disabled={rider.price === null} // Disable if price is null
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Next Button */}
+                  <div className="w-full mt-8">
+                    <button
+                      className="btn_blue_outline rounded-full mt-2"
+                      onClick={handleNext}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+        {step === 8 &&
+          insuranceType === "me" &&
+          selectedNeed === "Funeral Insurance" &&
+          !showPrice && ( // Show contact form if showPrice is false
+            <div className="flex justify-center w-full p-4 form-container">
+              <motion.div
+                key="step8"
+                initial={{ opacity: 0, x: 100 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.6, ease: "easeOut" },
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -100,
+                  transition: { duration: 0.6, ease: "easeIn" },
+                }}
+                className="w-full max-w-lg"
+              >
+                <div className="space-y-4">
+                  <h2 className="text-blue-70 bold-32">
+                    {firstName}, how can we contact you?
+                  </h2>
+
+                  <p className="text-blue-50 bold-40">
+                    Please provide your email or phone number so we can share
+                    your quote.
+                  </p>
+
+                  {/* Contact Form */}
+                  <div className="space-y-6">
+                    <div>
+                      <label htmlFor="email" className="text-blue-70 bold-24">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email"
+                        className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="phone" className="text-blue-70 bold-24">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="Enter your phone number"
+                        className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="w-full mt-8">
+                    <button
+                      className="btn_blue_outline rounded-full mt-2"
+                      onClick={() => {
+                        if (email || phone) {
+                          setShowPrice(true); // Show the price after submitting contact info
+                        } else {
+                          alert("Please provide your email or phone number.");
+                        }
+                      }}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+        {step === 8 &&
+          insuranceType === "me" &&
+          selectedNeed === "Funeral Insurance" &&
+          showPrice && ( // Show price if showPrice is true
+            <div className="flex justify-center w-full p-4 funeral-form-container">
+              <motion.div
+                key="step8-price"
+                initial={{ opacity: 0, x: 100 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.6, ease: "easeOut" },
+                }}
+                exit={{
+                  opacity: 0,
+                  x: -100,
+                  transition: { duration: 0.6, ease: "easeIn" },
+                }}
+                className="w-full max-w-lg"
+              >
+                <div className="space-y-4">
+                  <h2 className="text-blue-70 bold-32">
+                    {firstName}, here’s your quote:
+                  </h2>
+
+                  <p className="text-blue-50 bold-40">
+                    Based on your selections, your premium is:
+                  </p>
+
+                  {/* Price Breakdown */}
+                  <div className="space-y-6">
+                    <div className="p-4 border rounded-lg">
+                      <h3 className="text-blue-70 bold-24">Basic Premium</h3>
+                      <p className="text-gray-500 regular-18">
+                        Cover Amount: E {funeralcoverAmount.toLocaleString()}
+                      </p>
+                      <p className="text-blue-70 bold-24">
+                        E{" "}
+                        {calculateTombstonePrice(
+                          funeralcoverAmount,
+                          "basic"
+                        ).toFixed(2)}
+                      </p>
+                    </div>
+
+                    {selectedTombstoneBenefit && (
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="text-blue-70 bold-24">
+                          {selectedTombstoneBenefit}
+                        </h3>
+                        <p className="text-gray-500 regular-18">
+                          Additional coverage for tombstone expenses.
+                        </p>
+                        <p className="text-blue-70 bold-24">
+                          E{" "}
+                          {calculateTombstonePrice(
+                            funeralcoverAmount,
+                            selectedTombstoneBenefit
+                          ).toFixed(2)}
+                        </p>
+                      </div>
+                    )}
+
+                    {additionalBenefit && (
+                      <div className="p-4 border rounded-lg">
+                        <h3 className="text-blue-70 bold-24">
+                          Additional Benefit
+                        </h3>
+                        <p className="text-gray-500 regular-18">
+                          Pays E1,000 worth of groceries, E300 electricity, and
+                          E200 airtime.
+                        </p>
+                        <p className="text-blue-70 bold-24">E 5.70</p>
+                      </div>
+                    )}
+
+                    {/* Total Price */}
+                    <div className="p-4 border rounded-lg bg-blue-50">
+                      <h3 className="text-blue-70 bold-32">
+                        Total Premium p/m
+                      </h3>
+                      <p className="text-blue-70 bold-32">
+                        E{" "}
+                        {(
+                          calculateTombstonePrice(funeralcoverAmount, "basic") +
+                          (selectedTombstoneBenefit
+                            ? calculateTombstonePrice(
+                                funeralcoverAmount,
+                                selectedTombstoneBenefit
+                              )
+                            : 0) +
+                          (additionalBenefit ? 5.7 : 0)
+                        ).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Get Started Button */}
+                  <div className="w-full mt-8">
+                    <button
+                      className="btn_blue_outline rounded-full mt-2"
+                      onClick={() => {
+                        // Handle the "Get Started" action
+                        alert("Thank you! We’ll contact you shortly.");
+                      }}
+                    >
+                      Get Started
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             </div>

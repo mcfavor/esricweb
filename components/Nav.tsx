@@ -69,7 +69,7 @@ const Nav = () => {
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger>
-                <p className="regular-20 flexCenter">For Me</p>
+                <p className="regular-20 flexCenter text-blue-70">For Me</p>
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
@@ -87,7 +87,7 @@ const Nav = () => {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuTrigger>
-                <p className="regular-20">For My Business</p>
+                <p className="regular-20 text-blue-70">For My Business</p>
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <NavigationMenuLink>
@@ -100,19 +100,29 @@ const Nav = () => {
 
         {/* <ul className="hidden h-full gap-12 lg:flex">
           {NAV_LINKS.map((link) => (
-            <Link href={link.href} key={link.key} className="regular-20 text-white flexCenter cursor-pointer pb-1.5 transition-all hover:font-bold">
+            <Link
+              href={link.href}
+              key={link.key}
+              className="hover:font-bold text-blue-70 regular-20"
+            >
               {link.label}
             </Link>
-          ))} 
+          ))}
         </ul> */}
 
         <div className="lg:flexCenter hidden gap-10">
-          <div>
+          <div className="flex gap-10">
+            <a
+              href="https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/19/06/20250519064544-LGPSC121.json"
+              className="hover:font-bold text-blue-70 regular-20"
+            >
+              Chat
+            </a>
             <a href="/" className="hover:font-bold text-blue-70 regular-20">
               My Account
             </a>
           </div>
-          <Link href="/getaquote">
+          <Link href="http://localhost:3001/">
             <Button type="button" title="Get a Quote" variant="btn_yellow" />
           </Link>
         </div>

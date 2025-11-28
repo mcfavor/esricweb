@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const {
   default: flattenColorPalette,
@@ -7,61 +7,61 @@ const {
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
-        'xs': '400px',
-        '3xl': '1680px',
-        '4xl': '2200px',
+        xs: "400px",
+        "3xl": "1680px",
+        "4xl": "2200px",
       },
     },
-      maxWidth: {
-        '10xl': '1512px',
-      },
+    maxWidth: {
+      "10xl": "1512px",
+    },
     extend: {
       fontFamily: {
-        satoshi: ['Satoshi', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        satoshi: ["Satoshi", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
       },
       colors: {
         green: {
-          50: '#30AF5B',
-          90: '#292C27',
+          50: "#30AF5B",
+          90: "#292C27",
         },
         gray: {
-          10: '#EEEEEE',
-          20: '#A2A2A2',
-          30: '#7B7B7B',
-          50: '#585858',
-          90: '#141414',
+          10: "#EEEEEE",
+          20: "#A2A2A2",
+          30: "#7B7B7B",
+          50: "#585858",
+          90: "#141414",
         },
         orange: {
-          50: '#FF814C',
+          50: "#FF814C",
         },
         blue: {
-          70: '#021639',
-          50: '#2596be',
+          70: "#021639",
+          50: "#2596be",
         },
         yellow: {
-          50: '#FEC601',
+          50: "#FEC601",
         },
         indigo: {
-          50: '#2f3593',
+          50: "#2f3593",
         },
         lightYellow: {
-          50: '#f2ea7b',
+          50: "#f2ea7b",
         },
       },
       borderRadius: {
-        '5xl': '40px',
+        "5xl": "40px",
       },
       keyframes: {
         "accordion-down": {
@@ -80,6 +80,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
